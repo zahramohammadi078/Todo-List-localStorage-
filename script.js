@@ -5,6 +5,7 @@ const container = document.querySelector(".container");
 const allBtn = document.querySelector(".all-btn");
 const completeBtn = document.querySelector(".complete-btn");
 const activeBtn = document.querySelector(".active-btn");
+let downloadBtn=document.querySelector(".download-btn")
 let todoArray = [];
 
 addBtn.addEventListener("click", addBtnFunc);
@@ -43,7 +44,8 @@ function createTodoItem(todoObj) {
       newDivOne.style.opacity = "0.5";
       todoObj.complete = true;
     }
-
+    
+    updateTodoInFirebase(todoObj); 
     console.log(todoArray);
     setLocalStorage(todoArray);
   });
@@ -60,7 +62,7 @@ function createTodoItem(todoObj) {
     todoArray = todoArray.filter(function (todo) {
       return todo.id !== todoObj.id;
     });
-
+    deleteTodoFromFirebase(todoObj)
     console.log(todoArray);
     setLocalStorage(todoArray);
   });
@@ -77,8 +79,9 @@ function createTodoItem(todoObj) {
     if (editText !== null) {
       newP.textContent = editText;
       todoObj.title = editText;
+     
     }
-
+    updateTodoInFirebase(todoObj); 
     console.log(todoArray);
     setLocalStorage(todoArray);
   });
@@ -108,7 +111,7 @@ function addBtnFunc() {
     setLocalStorage(todoArray);
     console.log(todoObj);
     createTodoItem(todoObj);
-
+    updateTodoInFirebase(todoObj);
     inputBox.value = "";
   } else {
     // alert("it is empty");
@@ -188,3 +191,64 @@ function getLocalStorage() {
   }
   console.log(localStorageTodos);
 }
+
+
+
+
+
+function updateTodoInFirebase(todoObj) {
+  fetch(`https://todolist-zahra-default-rtdb.firebaseio.com//todos/${todoObj.id}.json`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(todoObj),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}
+
+function deleteTodoFromFirebase(todoObj) {
+  fetch(`https://todolist-zahra-default-rtdb.firebaseio.com//todos/${todoObj.id}.json`, {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log('Item deleted successfully');
+    } else {
+      console.error('Error deleting item');
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}
+
+//download 
+downloadBtn.addEventListener("click", downloadDataFromFirebase);
+
+function downloadDataFromFirebase() {
+  fetch('https://todolist-zahra-default-rtdb.firebaseio.com//todos.json')
+    .then(response => response.json())
+    .then(data => {
+      const jsonStr = JSON.stringify(data, null, 2); 
+      const blob = new Blob([jsonStr], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "todos.json"; 
+      a.click();
+      URL.revokeObjectURL(url);
+    })
+    .catch((error) => {
+      console.error('Error fetching data:', error);
+    });
+}
+
+
+
