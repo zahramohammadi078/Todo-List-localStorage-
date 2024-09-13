@@ -62,6 +62,8 @@ function createTodoItem(todoObj) {
     todoArray = todoArray.filter(function (todo) {
       return todo.id !== todoObj.id;
     });
+
+    
     deleteTodoFromFirebase(todoObj)
     console.log(todoArray);
     setLocalStorage(todoArray);
@@ -103,7 +105,7 @@ function addBtnFunc() {
   if (inputBox.value) {
     let todoValue = inputBox.value.trim();
     let todoObj = {
-      id: todoArray.length + 1,
+      id:  Date.now(),
       title: todoValue,
       complete: false,
     };
@@ -241,7 +243,7 @@ function downloadDataFromFirebase() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "todos.json"; 
+      a.download = "todos.txt"; 
       a.click();
       URL.revokeObjectURL(url);
     })
@@ -250,5 +252,27 @@ function downloadDataFromFirebase() {
     });
 }
 
+window.addEventListener('storage', function(event) {
+  if (event.key === 'todos' && !event.newValue) {
+    
+    clearTodosFromFirebase();
+  }
+});
+
+function clearTodosFromFirebase() {
+  fetch('https://todolist-zahra-default-rtdb.firebaseio.com//todos.json', {
+    method: 'DELETE',
+  })
+  .then(response => {
+    if (response.ok) {
+      console.log('All todos deleted successfully from Firebase');
+    } else {
+      console.error('Error deleting todos from Firebase');
+    }
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+}
 
 
