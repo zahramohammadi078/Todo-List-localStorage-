@@ -178,21 +178,7 @@ function setBackgroundColor(btn, bgColor, bgtextcolor, bgborder) {
   btn.style.color = bgtextcolor;
   btn.style.border = bgborder;
 }
-/////////////////////
-window.addEventListener('load', getLocalStorage);
 
-function getLocalStorage() {
-  let localStorageTodos = JSON.parse(localStorage.getItem('todos'));
-  if (localStorageTodos) {
-    todoArray = localStorageTodos;
-    localStorageTodos.forEach(todoObj => {
-      createTodoItem(todoObj);
-    });
-  } else {
-    todoArray = [];
-  }
-  console.log(localStorageTodos);
-}
 
 
 
