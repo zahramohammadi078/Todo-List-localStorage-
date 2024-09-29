@@ -173,7 +173,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-right: 219px;
+    margin-right: 147px;
   }
   .filter-btn {
     height: 25px;
@@ -205,6 +205,24 @@
     -moz-border-radius: 5px 5px 0px 0px;
     -ms-border-radius: 5px 5px 0px 0px;
     -o-border-radius: 5px 5px 0px 0px;
+  }
+
+  .upload-btn{
+
+    height: 25px;
+    border: 1px solid #8aaee0;
+    background-color: #8aaee0;
+    color: #05224d;
+    border-radius: 5px 5px 0px 0px;
+    cursor: pointer;
+    margin-right: 2px;
+    margin-left: 2px;
+    width: 70px;
+    -webkit-border-radius: 5px 5px 0px 0px;
+    -moz-border-radius: 5px 5px 0px 0px;
+    -ms-border-radius: 5px 5px 0px 0px;
+    -o-border-radius: 5px 5px 0px 0px;
+
   }
   
   
